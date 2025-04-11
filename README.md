@@ -1,4 +1,4 @@
-
+# 🍽️ Meal Explorer
 # Web Services Assignment 1 – TheMealDB API
 
 ## 👩‍💻 Group Members:
@@ -10,13 +10,38 @@
 This project uses the free [TheMealDB API](https://www.themealdb.com/api.php) to search for meals by name and show their details including image, category, area, and instructions.  
 It demonstrates how to interact with a REST API from the frontend using JavaScript.
 
-## 🚀 How to Run:
-1. Open `index.html` in your browser.
-2. Enter a meal name (e.g., `Arrabiata`).
-3. Press "Search".
-4. You will see meal info fetched from the API.
+## ✨ Features
 
-## 🧪 Tech Used:
+- Search meals by:
+  - Name
+  - First Letter
+  - Category
+  - Area
+  - Ingredient
+  - Random Meal
+  - All Categories
+  - All Areas
+
+- View full recipe details, including:
+  - Meal image
+  - Ingredients
+  - Instructions
+  - Category & Area
+
+## 🚀 How to Use
+
+1. Open `meals.html` in your browser.
+2. Navigate through the available options to explore meals.
+3. Click "View Recipe" to see the full recipe details on the same page.
+
+## 🛠️ Tech Stack
+
 - HTML
-- JavaScript (Fetch API)
-- TheMealDB public API
+- CSS
+- JavaScript
+- TheMealDB API
+
+---
+
+Made with ❤️ by a food lover.
+
