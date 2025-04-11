@@ -1,5 +1,4 @@
 # 🍽️ Meal Explorer
-# Web Services Assignment 1 – TheMealDB API
 
 ## 👩‍💻 Group Members:
 - Nour Manasrah – 121163 
