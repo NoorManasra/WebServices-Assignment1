@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Search Meal by Name</title>
+  <title>Search by Name</title>
   <style>
+    /* نفس الستايل الموجود عندك */
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fdf6e3;
@@ -35,7 +36,7 @@
       margin-bottom: 30px;
     }
 
-    input[type="text"] {
+    input {
       width: 100%;
       padding: 12px;
       font-size: 16px;
@@ -61,14 +62,6 @@
       background-color: #cf711d;
     }
 
-    .result {
-      margin-top: 25px;
-      padding: 15px;
-      background-color: #fff1db;
-      border-radius: 10px;
-      border: 1px solid #e0c097;
-    }
-
     .back-link {
       display: block;
       margin-top: 30px;
@@ -81,24 +74,183 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    .meals-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .meal-item {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .meal-item img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .meal-item h3 {
+      color: #c0392b;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    /* For Recipe View */
+    .recipe-view {
+      background-color: #fff;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: none;
+      width: 80%; /* جعل العرض 80% من العرض الكامل للصفحة */
+      max-width: 10000000px; /* الحد الأقصى للعرض ليكون أكبر */
+      margin-left: auto; /* توسيط العرض */
+      margin-right: auto; /* توسيط العرض */
+      overflow-y: auto; /* منع التمرير الرأسي إذا كانت الوصفة طويلة */
+      max-height: 300px; /* تحديد حد أقصى للطول */
+    }
+
+    .recipe-view img {
+      width: 100%; /* التأكد من أن الصورة تملأ العرض بالكامل */
+      border-radius: 8px;
+    }
+
+    .recipe-view h3 {
+      color: #c0392b;
+      font-size: 24px; /* حجم الخط يمكن تكبيره حسب الحاجة */
+    }
+
+    .recipe-view p {
+      font-size: 18px; /* تكبير الخط قليلاً */
+      line-height: 1.6;
+    }
+
+    .recipe-view ul {
+      list-style: none;
+      padding: 0;
+      font-size: 16px; /* حجم الخط للمكونات */
+    }
+
+    .recipe-view li {
+      margin: 8px 0;
+    }
+
+    @media (max-width: 768px) {
+      /* تحسين المظهر للأجهزة الصغيرة */
+      .recipe-view {
+        width: 90%; /* جعل العرض يتناسب مع الأجهزة الصغيرة */
+        max-width: 100%; /* الحد الأقصى للعرض على الأجهزة الصغيرة */
+      }
+    }
+
+
+
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🔎 Search Meal by Name</h1>
-  </header>
+<header>
+  <h1>🍂 Search by Name</h1>
+</header>
 
-  <div class="container">
-    <h2>Type a meal name below</h2>
-    <form class="search-form">
-      <input type="text" id="mealName" placeholder="e.g. Pizza">
-      <button type="submit">Search</button>
-    </form>
+<div class="container">
+  <h2>Enter Meal Name</h2>
+  <form class="name-form" id="name-form">
+    <input type="text" id="meal-name" placeholder="Enter meal name" required>
+    <button type="submit">Search</button>
+  </form>
 
+  <div id="meals-list" class="meals-list"></div>
+  <div id="error-message" class="error-message"></div>
 
-    <a href="index.html" class="back-link">🏠 Back to Home</a>
-  </div>
+  <a href="meals.html" class="back-link">🏠 Back to Home</a>
+</div>
+
+<script>
+  document.getElementById('name-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get entered meal name
+    const mealName = document.getElementById('meal-name').value;
+    const mealsList = document.getElementById('meals-list');
+    const errorMessage = document.getElementById('error-message');
+
+    // Clear previous results and errors
+    mealsList.innerHTML = '';
+    errorMessage.innerHTML = '';
+
+    // Fetch meals from TheMealDB API based on name
+    fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`)
+            .then(response => response.json())
+            .then(data => {
+              const meals = data.meals;
+
+              if (!meals) {
+                errorMessage.innerHTML = 'No meals found. Please try another name.';
+              } else {
+                // Display meals
+                meals.forEach(meal => {
+                  const mealItem = document.createElement('div');
+                  mealItem.classList.add('meal-item');
+                  mealItem.innerHTML = `
+              <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+              <h3>${meal.strMeal}</h3>
+              <button class="view-recipe" data-id="${meal.idMeal}">View Recipe</button>
+            `;
+                  mealsList.appendChild(mealItem);
+                });
+
+                // Add event listener for "View Recipe" buttons
+                const viewRecipeButtons = document.querySelectorAll('.view-recipe');
+                viewRecipeButtons.forEach(button => {
+                  button.addEventListener('click', function() {
+                    const mealId = this.getAttribute('data-id');
+                    const recipeUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
+
+                    // Fetch recipe details and display in same page
+                    fetch(recipeUrl)
+                            .then(response => response.json())
+                            .then(data => {
+                              const meal = data.meals[0];
+                              const recipeView = document.createElement('div');
+                              recipeView.classList.add('recipe-view');
+                              recipeView.innerHTML = `
+                    <h3>${meal.strMeal}</h3>
+                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                    <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+                    <p><strong>Ingredients:</strong></p>
+                    <ul>
+                      <li>${meal.strIngredient1} - ${meal.strMeasure1}</li>
+                      <li>${meal.strIngredient2} - ${meal.strMeasure2}</li>
+                      <li>${meal.strIngredient3} - ${meal.strMeasure3}</li>
+                      <!-- Add more ingredients as needed -->
+                    </ul>
+                  `;
+                              mealsList.appendChild(recipeView);
+                              recipeView.style.display = 'block';
+                            });
+                  });
+                });
+              }
+            })
+            .catch(error => {
+              errorMessage.innerHTML = 'Error fetching meals. Please try again later.';
+              console.error('Error fetching meals:', error);
+            });
+  });
+</script>
 
 </body>
 </html>

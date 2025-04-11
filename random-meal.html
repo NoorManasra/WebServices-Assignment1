@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Random Meal</title>
   <style>
+    /* نفس الستايل الموجود عندك */
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fdf6e3;
@@ -51,14 +52,6 @@
       background-color: #cf711d;
     }
 
-    .result {
-      margin-top: 25px;
-      padding: 15px;
-      background-color: #fff1db;
-      border-radius: 10px;
-      border: 1px solid #e0c097;
-    }
-
     .back-link {
       display: block;
       margin-top: 30px;
@@ -71,23 +64,104 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    .meal-item {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .meal-item img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .meal-item h3 {
+      color: #c0392b;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .recipe-details {
+      margin-top: 30px;
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🎲 Random Meal</h1>
-  </header>
+<header>
+  <h1>🍽️ Random Meal</h1>
+</header>
 
-  <div class="container">
-    <h2>Click below to get a random meal</h2>
-    <button onclick="getRandomMeal()">Get Random Meal</button>
+<div class="container">
+  <h2>Get a Random Meal</h2>
+  <button id="get-random-meal">Get Random Meal</button>
 
+  <!-- Move recipe details above the meal list -->
+  <div id="recipe-details" class="recipe-details"></div>
 
+  <div id="error-message" class="error-message"></div>
 
-    <a href="index.html" class="back-link">🏠 Back to Home</a>
-  </div>
+  <a href="meals.html" class="back-link">🏠 Back to Home</a>
+</div>
 
+<script>
+  document.getElementById('get-random-meal').addEventListener('click', function() {
+    const recipeDetails = document.getElementById('recipe-details');
+    const errorMessage = document.getElementById('error-message');
+
+    // Clear previous results and errors
+    recipeDetails.innerHTML = '';
+    errorMessage.innerHTML = '';
+
+    // Fetch a random meal from TheMealDB API
+    fetch('https://www.themealdb.com/api/json/v1/1/random.php')
+            .then(response => response.json())
+            .then(data => {
+              const meal = data.meals[0];
+
+              // Display the random meal details
+              recipeDetails.innerHTML = `
+          <h2>${meal.strMeal}</h2>
+          <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+          <p><strong>Category:</strong> ${meal.strCategory}</p>
+          <p><strong>Area:</strong> ${meal.strArea}</p>
+          <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+          <h3>Ingredients:</h3>
+          <ul>
+            ${getIngredientsList(meal)}
+          </ul>
+        `;
+            })
+            .catch(error => {
+              errorMessage.innerHTML = 'Error fetching random meal. Please try again later.';
+              console.error('Error fetching random meal:', error);
+            });
+  });
+
+  // Get the ingredients list for a meal
+  function getIngredientsList(meal) {
+    const ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+      if (meal[`strIngredient${i}`] && meal[`strIngredient${i}`] !== "") {
+        ingredients.push(`<li>${meal[`strIngredient${i}`]} - ${meal[`strMeasure${i}`]}</li>`);
+      }
+    }
+    return ingredients.join('');
+  }
+</script>
 
 </body>
 </html>

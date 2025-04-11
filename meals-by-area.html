@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Search by Area</title>
   <style>
+    /* نفس الستايل الموجود عندك */
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fdf6e3;
@@ -73,29 +74,179 @@
     .back-link:hover {
       text-decoration: underline;
     }
+
+    .meals-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .meal-item {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .meal-item img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .meal-item h3 {
+      color: #c0392b;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    .recipe-details {
+      margin-top: 30px;
+      background-color: #f5f5f5;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>🌍 Search by Area</h1>
-  </header>
+<header>
+  <h1>🌍 Search by Area</h1>
+</header>
 
-  <div class="container">
-    <h2>Select an area</h2>
-    <form class="area-form">
-      <select id="area">
-        <option value="italy">Italy</option>
-        <option value="india">India</option>
-        <option value="china">China</option>
-        <option value="mexico">Mexico</option>
-        <option value="usa">USA</option>
-      </select>
-      <button type="submit">Search</button>
-    </form>
+<div class="container">
+  <h2>Choose a meal area</h2>
+  <form class="area-form" id="area-form">
+    <select id="area">
+      <option value="American">American</option>
+      <option value="British">British</option>
+      <option value="Canadian">Canadian</option>
+      <option value="Chinese">Chinese</option>
+      <option value="French">French</option>
+      <option value="Greek">Greek</option>
+      <option value="Indian">Indian</option>
+      <option value="Irish">Irish</option>
+      <option value="Italian">Italian</option>
+      <option value="Jamaican">Jamaican</option>
+      <option value="Japanese">Japanese</option>
+      <option value="Kenyan">Kenyan</option>
+      <option value="Mexican">Mexican</option>
+      <option value="Moroccan">Moroccan</option>
+      <option value="Spanish">Spanish</option>
+      <option value="Thai">Thai</option>
+      <option value="Tunisian">Tunisian</option>
+      <option value="Turkish">Turkish</option>
+    </select>
 
-    <a href="index.html" class="back-link">🏠 Back to Home</a>
-  </div>
+    <button type="submit">Search</button>
+  </form>
+
+  <!-- Move recipe details above the meals list -->
+  <div id="recipe-details" class="recipe-details"></div>
+
+  <div id="meals-list" class="meals-list"></div>
+  <div id="error-message" class="error-message"></div>
+
+  <a href="meals.html" class="back-link">🏠 Back to Home</a>
+</div>
+
+<script>
+  document.getElementById('area-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Get selected area
+    const area = document.getElementById('area').value;
+    const mealsList = document.getElementById('meals-list');
+    const errorMessage = document.getElementById('error-message');
+    const recipeDetails = document.getElementById('recipe-details');
+
+    // Clear previous results and errors
+    mealsList.innerHTML = '';
+    errorMessage.innerHTML = '';
+    recipeDetails.innerHTML = ''; // Clear recipe details
+
+    // Fetch meals from TheMealDB API based on area
+    fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?a=${area}`)
+            .then(response => response.json())
+            .then(data => {
+              const meals = data.meals;
+
+              if (!meals) {
+                errorMessage.innerHTML = 'No meals found for this area. Please try another one.';
+              } else {
+                // Display meals
+                meals.forEach(meal => {
+                  const mealItem = document.createElement('div');
+                  mealItem.classList.add('meal-item');
+                  mealItem.innerHTML = `
+              <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+              <h3>${meal.strMeal}</h3>
+              <button class="view-recipe" data-meal-id="${meal.idMeal}">View Recipe</button>
+            `;
+                  mealsList.appendChild(mealItem);
+                });
+
+                // Add event listener to each "View Recipe" button
+                document.querySelectorAll('.view-recipe').forEach(button => {
+                  button.addEventListener('click', function() {
+                    const mealId = this.getAttribute('data-meal-id');
+                    fetchRecipeDetails(mealId);
+                  });
+                });
+              }
+            })
+            .catch(error => {
+              errorMessage.innerHTML = 'Error fetching meals. Please try again later.';
+              console.error('Error fetching meals:', error);
+            });
+  });
+
+  // Fetch and display recipe details
+  function fetchRecipeDetails(mealId) {
+    const recipeDetails = document.getElementById('recipe-details');
+    recipeDetails.innerHTML = ''; // Clear previous recipe details
+
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+            .then(response => response.json())
+            .then(data => {
+              const meal = data.meals[0];
+              recipeDetails.innerHTML = `
+          <h2>${meal.strMeal}</h2>
+          <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+          <p><strong>Category:</strong> ${meal.strCategory}</p>
+          <p><strong>Area:</strong> ${meal.strArea}</p>
+          <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+          <h3>Ingredients:</h3>
+          <ul>
+            ${getIngredientsList(meal)}
+          </ul>
+        `;
+            })
+            .catch(error => {
+              recipeDetails.innerHTML = 'Error fetching recipe details.';
+              console.error('Error fetching recipe details:', error);
+            });
+  }
+
+  // Get the ingredients list for a meal
+  function getIngredientsList(meal) {
+    const ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+      if (meal[`strIngredient${i}`] && meal[`strIngredient${i}`] !== "") {
+        ingredients.push(`<li>${meal[`strIngredient${i}`]} - ${meal[`strMeasure${i}`]}</li>`);
+      }
+    }
+    return ingredients.join('');
+  }
+</script>
 
 </body>
 </html>
