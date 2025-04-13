@@ -199,22 +199,48 @@
             .then(data => {
               const meal = data.meals[0];
               recipeDetails.innerHTML = `
-          <h2>${meal.strMeal}</h2>
-          <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
-          <p><strong>Category:</strong> ${meal.strCategory}</p>
-          <p><strong>Area:</strong> ${meal.strArea}</p>
-          <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
-          <h3>Ingredients:</h3>
-          <ul>
-            ${getIngredientsList(meal)}
-          </ul>
-        `;
+        <h2>${meal.strMeal}</h2>
+        <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+        <p><strong>Category:</strong> ${meal.strCategory}</p>
+        <p><strong>Area:</strong> ${meal.strArea}</p>
+        <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+        <h3>Ingredients:</h3>
+        <ul>
+          ${getIngredientsList(meal)}
+        </ul>
+        <button id="add-to-favorites" data-meal-id="${meal.idMeal}"> ❤️ Add to Favorites</button>
+      `;
+
+              // Add event listener to the "Add to Favorites" button
+              document.getElementById('add-to-favorites').addEventListener('click', function() {
+                addToFavorites(meal.idMeal);
+              });
             })
             .catch(error => {
               recipeDetails.innerHTML = 'Error fetching recipe details.';
               console.error('Error fetching recipe details:', error);
             });
   }
+
+  // Add meal to favorites
+  function addToFavorites(mealId) {
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+            .then(res => res.json())
+            .then(data => {
+              const meal = data.meals[0];
+              let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+              const mealExists = favorites.some(fav => fav.idMeal === meal.idMeal);
+
+              if (!mealExists) {
+                favorites.push(meal);
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                alert('Recipe added to favorites!');
+              } else {
+                alert('This recipe is already in your favorites!');
+              }
+            });
+  }
+
 
   // Get the ingredients list for a meal
   function getIngredientsList(meal) {

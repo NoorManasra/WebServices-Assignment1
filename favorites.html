@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Favorite Meals</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #fef9f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #d35400;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #fffef8;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #a84300;
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .meal-card {
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            padding: 15px;
+            transition: transform 0.2s;
+        }
+
+        .meal-card:hover {
+            transform: scale(1.02);
+        }
+
+        .meal-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .meal-card h3 {
+            margin: 10px 0;
+            color: #d35400;
+        }
+
+        .remove-btn,
+        .view-btn {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 5px;
+        }
+
+        .remove-btn {
+            background-color: #e74c3c;
+        }
+
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .view-btn:hover {
+            background-color: #d35400;
+        }
+
+        .recipe-details {
+            margin-top: 10px;
+            text-align: left;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 16px;
+            color: #8e5b3f;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .no-favorites {
+            text-align: center;
+            color: #777;
+            margin-top: 30px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>❤️ My Favorite Meals</h1>
+</header>
+
+<div class="container">
+    <h2>Saved Recipes</h2>
+    <div id="favorites-container" class="favorites-grid"></div>
+    <p id="no-favorites" class="no-favorites" style="display: none;">You have no favorite meals yet.</p>
+    <a href="meals.html" class="back-link">🏠 Back to Home</a>
+</div>
+
+<script>
+    const container = document.getElementById('favorites-container');
+    const noFavoritesMsg = document.getElementById('no-favorites');
+
+    function loadFavorites() {
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+        container.innerHTML = '';
+
+        if (favorites.length === 0) {
+            noFavoritesMsg.style.display = 'block';
+            return;
+        }
+
+        noFavoritesMsg.style.display = 'none';
+
+        favorites.forEach(meal => {
+            const mealId = meal.id || meal.idMeal;
+            const mealName = meal.name || meal.strMeal;
+            const mealThumb = meal.thumb || meal.strMealThumb;
+
+            const card = document.createElement('div');
+            card.classList.add('meal-card');
+            card.innerHTML = `
+                <img src="${mealThumb}" alt="${mealName}">
+                <h3>${mealName}</h3>
+                <button class="view-btn" data-id="${mealId}">View Recipe</button>
+                <button class="remove-btn" data-id="${mealId}">Remove</button>
+                <div class="recipe-details" id="recipe-${mealId}" style="display: none;"></div>
+            `;
+            container.appendChild(card);
+        });
+
+        // Add event listeners
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const mealId = this.getAttribute('data-id');
+                removeFavorite(mealId);
+            });
+        });
+
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const mealId = this.getAttribute('data-id');
+                const detailsDiv = document.getElementById(`recipe-${mealId}`);
+
+                if (detailsDiv.style.display === 'block') {
+                    detailsDiv.style.display = 'none';
+                    detailsDiv.innerHTML = '';
+                    return;
+                }
+
+                const res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`);
+                const data = await res.json();
+                const meal = data.meals[0];
+
+                detailsDiv.innerHTML = `
+                    <strong>Category:</strong> ${meal.strCategory || 'N/A'}<br>
+                    <strong>Area:</strong> ${meal.strArea || 'N/A'}<br>
+                    <strong>Instructions:</strong><br>${meal.strInstructions || 'No instructions.'}
+                `;
+                detailsDiv.style.display = 'block';
+            });
+        });
+    }
+
+    function removeFavorite(id) {
+        let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        favorites = favorites.filter(meal =>
+            (meal.id || meal.idMeal) != id
+        );
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        loadFavorites();
+    }
+
+    loadFavorites();
+</script>
+
+</body>
+</html>

@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Search by Category</title>
   <style>
-
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #fdf6e3;
@@ -114,6 +113,15 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
+    #favorite-button {
+      margin-top: 15px;
+      background-color: #d35400;
+      font-size: 16px;
+    }
+
+    #favorite-button:hover {
+      background-color: #a84300;
+    }
   </style>
 </head>
 <body>
@@ -143,9 +151,7 @@
     <button type="submit">Search</button>
   </form>
 
-  <!-- Move recipe details above the meals list -->
   <div id="recipe-details" class="recipe-details"></div>
-
   <div id="meals-list" class="meals-list"></div>
   <div id="error-message" class="error-message"></div>
 
@@ -156,18 +162,15 @@
   document.getElementById('category-form').addEventListener('submit', function(event) {
     event.preventDefault();
 
-    // Get selected category
     const category = document.getElementById('category').value;
     const mealsList = document.getElementById('meals-list');
     const errorMessage = document.getElementById('error-message');
     const recipeDetails = document.getElementById('recipe-details');
 
-    // Clear previous results and errors
     mealsList.innerHTML = '';
     errorMessage.innerHTML = '';
-    recipeDetails.innerHTML = ''; // Clear recipe details
+    recipeDetails.innerHTML = '';
 
-    // Fetch meals from TheMealDB API based on category
     fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
             .then(response => response.json())
             .then(data => {
@@ -176,7 +179,6 @@
               if (!meals) {
                 errorMessage.innerHTML = 'No meals found for this category. Please try another one.';
               } else {
-                // Display meals
                 meals.forEach(meal => {
                   const mealItem = document.createElement('div');
                   mealItem.classList.add('meal-item');
@@ -188,7 +190,6 @@
                   mealsList.appendChild(mealItem);
                 });
 
-                // Add event listener to each "View Recipe" button
                 document.querySelectorAll('.view-recipe').forEach(button => {
                   button.addEventListener('click', function() {
                     const mealId = this.getAttribute('data-meal-id');
@@ -203,10 +204,9 @@
             });
   });
 
-  // Fetch and display recipe details
   function fetchRecipeDetails(mealId) {
     const recipeDetails = document.getElementById('recipe-details');
-    recipeDetails.innerHTML = ''; // Clear previous recipe details
+    recipeDetails.innerHTML = '';
 
     fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
             .then(response => response.json())
@@ -219,10 +219,30 @@
           <p><strong>Area:</strong> ${meal.strArea}</p>
           <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
           <h3>Ingredients:</h3>
-          <ul>
-            ${getIngredientsList(meal)}
-          </ul>
+          <ul>${getIngredientsList(meal)}</ul>
+          <button id="favorite-button" data-meal-id="${meal.idMeal}" data-meal-name="${meal.strMeal}" data-meal-thumb="${meal.strMealThumb}">
+            ❤️ Add to Favorites
+          </button>
         `;
+
+              const favBtn = document.getElementById('favorite-button');
+              favBtn.addEventListener('click', function () {
+                const mealId = this.getAttribute('data-meal-id');
+                const mealName = this.getAttribute('data-meal-name');
+                const mealThumb = this.getAttribute('data-meal-thumb');
+
+                const favoriteMeal = { id: mealId, name: mealName, thumb: mealThumb };
+                let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+                const exists = favorites.some(meal => meal.id === mealId);
+                if (!exists) {
+                  favorites.push(favoriteMeal);
+                  localStorage.setItem('favorites', JSON.stringify(favorites));
+                  alert(`${mealName} added to favorites! ❤️`);
+                } else {
+                  alert(`${mealName} is already in your favorites!`);
+                }
+              });
             })
             .catch(error => {
               recipeDetails.innerHTML = 'Error fetching recipe details.';
@@ -230,7 +250,6 @@
             });
   }
 
-  // Get the ingredients list for a meal
   function getIngredientsList(meal) {
     const ingredients = [];
     for (let i = 1; i <= 20; i++) {

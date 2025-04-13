@@ -100,6 +100,20 @@
       background-color: #a93226;
     }
 
+    .favorites-btn {
+      margin-top: 10px;
+      background-color: #f39c12;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .favorites-btn:hover {
+      background-color: #e67e22;
+    }
+
     .back-link {
       display: block;
       margin-top: 30px;
@@ -124,7 +138,7 @@
   <h2>Meal Categories</h2>
   <ul id="category-list" class="category-list"></ul>
 
-  <div id="meal-details" class="meal-details"></div> <!-- 👈 الوصفة هون -->
+  <div id="meal-details" class="meal-details"></div>
 
   <div id="meals-list" class="meals-list"></div>
 
@@ -194,8 +208,15 @@
           <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
           <h3>Ingredients:</h3>
           <ul>${ingredients}</ul>
+          <button class="favorites-btn" data-id="${meal.idMeal}">❤️ Add to Favorites</button>
         `;
               mealDetails.scrollIntoView({ behavior: 'smooth' });
+
+              // Add event listener to favorite button
+              const favoritesBtn = mealDetails.querySelector('.favorites-btn');
+              favoritesBtn.addEventListener('click', () => {
+                addToFavorites(meal);
+              });
             });
   }
 
@@ -209,6 +230,20 @@
       }
     }
     return ingredients.join('');
+  }
+
+  // Add to favorites
+  function addToFavorites(meal) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const mealExists = favorites.some(fav => fav.idMeal === meal.idMeal);
+
+    if (!mealExists) {
+      favorites.push(meal);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      alert('Recipe added to favorites!');
+    } else {
+      alert('This recipe is already in your favorites!');
+    }
   }
 </script>
 

@@ -178,7 +178,7 @@
 </div>
 
 <script>
-  document.getElementById('name-form').addEventListener('submit', function(event) {
+  document.getElementById('name-form').addEventListener('submit', function (event) {
     event.preventDefault();
 
     // Get entered meal name
@@ -214,7 +214,7 @@
                 // Add event listener for "View Recipe" buttons
                 const viewRecipeButtons = document.querySelectorAll('.view-recipe');
                 viewRecipeButtons.forEach(button => {
-                  button.addEventListener('click', function() {
+                  button.addEventListener('click', function () {
                     const mealId = this.getAttribute('data-id');
                     const recipeUrl = `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`;
 
@@ -236,6 +236,8 @@
                       <li>${meal.strIngredient3} - ${meal.strMeasure3}</li>
                       <!-- Add more ingredients as needed -->
                     </ul>
+                     <button class="favorite-button" onclick="addToFavorites('${meal.idMeal}')">❤️ Add to Favorites</button>
+
                   `;
                               mealsList.appendChild(recipeView);
                               recipeView.style.display = 'block';
@@ -249,6 +251,31 @@
               console.error('Error fetching meals:', error);
             });
   });
+
+    function addToFavorites(mealId) {
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`)
+            .then(response => response.json())
+            .then(data => {
+              const meal = data.meals[0];
+              let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+              // Check if already exists
+              if (favorites.find(fav => fav.idMeal === meal.idMeal)) {
+                alert('Already in favorites!');
+                return;
+              }
+
+              favorites.push(meal);
+              localStorage.setItem('favorites', JSON.stringify(favorites));
+              alert('Added to favorites!');
+            })
+            .catch(error => {
+              console.error('Error saving to favorites:', error);
+              alert('Error adding to favorites.');
+            });
+  }
+
+
 </script>
 
 </body>
