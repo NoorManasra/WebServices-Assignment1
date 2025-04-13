@@ -1,27 +1,27 @@
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #fdf6e3;
-  background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
-  margin: 0;
-  padding: 0;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>All Categories</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fdf6e3;
+      background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+      margin: 0;
+      padding: 0;
+    }
 
-/* Header */
-header {
-  background-color: #fff;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  position: sticky;
-  top: 0;
-  z-index: 999;
-}
+    header {
+      background-color: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
 
-/* Navigation */
-.nav-container h1 {
-  color: red;
-}
-
-nav ul {
+    nav ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -54,35 +54,69 @@ nav ul li a .icon {
   font-size: 16px;
 }
 
-/* Container */
-.container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 30px;
-  background-color: #fff5e1;
-  border-radius: 16px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-}
 
-/* Headings */
-h2 {
-  text-align: center;
-  color: #6e3b1e;
-  margin-bottom: 20px;
-}
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background-color: #fff5e1;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
 
-/* Categories */
-.category-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  padding: 0;
-  margin: 0 auto;
-  list-style-type: none;
-}
+    h2 {
+      text-align: center;
+      color: #6e3b1e;
+      margin-bottom: 20px;
+    }
 
-.category-item {
+    .category-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .category-item {
+      background-color: #e67e22;
+      color: white;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .category-item:hover {
+      background-color: #d35400;
+    }
+
+    .meal-details {
+      margin: 40px 0 30px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+
+    .meal-details img {
+      max-width: 100%;
+      border-radius: 12px;
+    }
+
+    .meals-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .meal-item {
+      background-color: #fff;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .category-item {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,6 +133,10 @@ h2 {
   min-width: 100px;
   transition: background-color 0.3s ease;
 }
+.nav-container h1 {
+  color: red;
+}
+
 
 .category-item:hover {
   background-color: #d35400;
@@ -107,80 +145,210 @@ h2 {
 .category-item .icon {
   font-size: 14px;
 }
-
-/* Meal List */
-.meals-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 0;
+  margin: 0 auto;
 }
 
-.meal-item {
-  background-color: #fff;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  text-align: center;
-}
+    .meal-item img {
+      width: 100%;
+      border-radius: 8px;
+    }
 
-.meal-item img {
-  width: 100%;
-  border-radius: 8px;
-}
+    .meal-item button {
+      margin-top: 10px;
+      background-color: #c0392b;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-.meal-item button {
-  margin-top: 10px;
-  background-color: #c0392b;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    .meal-item button:hover {
+      background-color: #a93226;
+    }
 
-.meal-item button:hover {
-  background-color: #a93226;
-}
+    .favorites-btn {
+      margin-top: 10px;
+      background-color: #f39c12;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
 
-/* Favorites Button */
-.favorites-btn {
-  margin-top: 10px;
-  background-color: #f39c12;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
+    .favorites-btn:hover {
+      background-color: #e67e22;
+    }
 
-.favorites-btn:hover {
-  background-color: #e67e22;
-}
+    .back-link {
+      display: block;
+      margin-top: 30px;
+      text-align: center;
+      font-size: 16px;
+      color: #8e5b3f;
+      text-decoration: none;
+    }
 
-/* Meal Details */
-.meal-details {
-  margin: 40px 0 30px;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 16px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
 
-.meal-details img {
-  max-width: 100%;
-  border-radius: 12px;
-}
 
-/* Back Link */
-.back-link {
-  display: block;
-  margin-top: 30px;
-  text-align: center;
-  font-size: 16px;
-  color: #8e5b3f;
-  text-decoration: none;
-}
+ 
+    <div class="nav-container">
+      <h1>📂 All Meal Categories</h1>
+      <nav>
+        <ul>
+          <li><a href="meals.html"><span class="icon">🏠</span>Home</a></li>
+          <li><a href="search-by-letter.html"><span class="icon">🔤</span>First Letter</a></li>
+          <li><a href="random-meal.html"><span class="icon">🎲</span>Random</a></li>
+          <li><a href="meals-by-category.html"><span class="icon">🍛</span>Category</a></li>
+          <li><a href="meals-by-area.html"><span class="icon">🌍</span>Area</a></li>
+          <li><a href="meals-by-ingredient.html"><span class="icon">🥕</span>Ingredient</a></li>
+          <li><a href="ShowMyRecipes.html"><span class="icon">📋</span>My Recipes</a></li>
+          <li><a href="favorites.html"><span class="icon">❤️</span>Favorites</a></li>
+        </ul>
+      </nav>
+    </div>
+    
 
-.back-link:hover {
-  text-decoration: underline;
-}
+</header>
+<div class="container">
+  <h2>Meal Categories</h2>
+  <ul id="category-list" class="category-list"></ul>
+
+  <div id="meal-details" class="meal-details"></div>
+
+  <div id="meals-list" class="meals-list"></div>
+
+  
+</div>
+
+<script>
+  const categoryList = document.getElementById('category-list');
+  const mealsList = document.getElementById('meals-list');
+  const mealDetails = document.getElementById('meal-details');
+
+  // Get all categories
+  fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list')
+          .then(res => res.json())
+          .then(data => {
+            data.meals.forEach(category => {
+  const li = document.createElement('li');
+  li.classList.add('category-item');
+
+  // أيقونة حسب نوع التصنيف
+  let emoji = "🍽️";
+  const cat = category.strCategory.toLowerCase();
+  if (cat.includes("beef")) emoji = "🥩";
+  else if (cat.includes("chicken")) emoji = "🍗";
+  else if (cat.includes("dessert")) emoji = "🍰";
+  else if (cat.includes("seafood")) emoji = "🐟";
+  else if (cat.includes("vegetarian")) emoji = "🥦";
+  else if (cat.includes("lamb")) emoji = "🍖";
+  else if (cat.includes("pasta")) emoji = "🍝";
+  else if (cat.includes("breakfast")) emoji = "🍳";
+
+  li.innerHTML = `<span class="icon">${emoji}</span> ${category.strCategory}`;
+  li.addEventListener('click', () => {
+    fetchMealsByCategory(category.strCategory);
+  });
+  categoryList.appendChild(li);
+});
+
+          });
+
+  // Get meals by category
+  function fetchMealsByCategory(category) {
+    mealsList.innerHTML = '';
+    mealDetails.innerHTML = ''; // Clear any previous recipe
+    fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`)
+            .then(res => res.json())
+            .then(data => {
+              data.meals.forEach(meal => {
+                const mealDiv = document.createElement('div');
+                mealDiv.classList.add('meal-item');
+                mealDiv.innerHTML = `
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+            <h3>${meal.strMeal}</h3>
+            <button data-id="${meal.idMeal}">View Recipe</button>
+          `;
+                mealsList.appendChild(mealDiv);
+              });
+
+              document.querySelectorAll('.meal-item button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                  const mealId = btn.getAttribute('data-id');
+                  fetchRecipe(mealId);
+                });
+              });
+            });
+  }
+
+  // Get recipe by ID
+  function fetchRecipe(id) {
+    mealDetails.innerHTML = '';
+    fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`)
+            .then(res => res.json())
+            .then(data => {
+              const meal = data.meals[0];
+              const ingredients = getIngredientsList(meal);
+              mealDetails.innerHTML = `
+          <h2>${meal.strMeal}</h2>
+          <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+          <p><strong>Category:</strong> ${meal.strCategory}</p>
+          <p><strong>Area:</strong> ${meal.strArea}</p>
+          <p><strong>Instructions:</strong> ${meal.strInstructions}</p>
+          <h3>Ingredients:</h3>
+          <ul>${ingredients}</ul>
+          <button class="favorites-btn" data-id="${meal.idMeal}">❤️ Add to Favorites</button>
+        `;
+              mealDetails.scrollIntoView({ behavior: 'smooth' });
+
+              // Add event listener to favorite button
+              const favoritesBtn = mealDetails.querySelector('.favorites-btn');
+              favoritesBtn.addEventListener('click', () => {
+                addToFavorites(meal);
+              });
+            });
+  }
+
+  function getIngredientsList(meal) {
+    const ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+      const ingredient = meal[`strIngredient${i}`];
+      const measure = meal[`strMeasure${i}`];
+      if (ingredient && ingredient.trim()) {
+        ingredients.push(`<li>${ingredient} - ${measure}</li>`);
+      }
+    }
+    return ingredients.join('');
+  }
+
+  // Add to favorites
+  function addToFavorites(meal) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    const mealExists = favorites.some(fav => fav.idMeal === meal.idMeal);
+
+    if (!mealExists) {
+      favorites.push(meal);
+      localStorage.setItem('favorites', JSON.stringify(favorites));
+      alert('Recipe added to favorites!');
+    } else {
+      alert('This recipe is already in your favorites!');
+    }
+  }
+</script>
+
+</body>
+</html>
