@@ -239,7 +239,9 @@
                      <button class="favorite-button" onclick="addToFavorites('${meal.idMeal}')">❤️ Add to Favorites</button>
 
                   `;
-                              mealsList.appendChild(recipeView);
+                              const container = document.querySelector('.container');
+                              const mealsList = document.getElementById('meals-list');
+                              container.insertBefore(recipeView, mealsList);
                               recipeView.style.display = 'block';
                             });
                   });
