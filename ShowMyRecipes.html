@@ -148,6 +148,23 @@
   </style>
 </head>
 <body>
+<<<<<<< HEAD
+<header>
+  <div class="nav-container">
+    <h1>🍽️ Meal Explorer</h1>
+    <nav>
+      <ul>
+        <li><a href="meals.html">🏠 Home</a></li>
+        <li><a href="search-by-letter.html">🔤 Search by First Letter</a></li>
+        <li><a href="random-meal.html">🎲 Random Meal</a></li>
+        <li><a href="all-categories.html">📂 All Categories</a></li>
+        <li><a href="meals-by-category.html">🍛 By Category</a></li>
+        <li><a href="meals-by-area.html">🌍 By Area</a></li>
+        <li><a href="meals-by-ingredient.html">🥕 By Ingredient</a></li>
+        <li><a href="favorites.html">❤️ Favorites</a></li>
+      </ul>
+    </nav>
+=======
   <header>
     <div class="nav-container">
       <h1>🍽️ Meal Explorer</h1>
@@ -193,23 +210,96 @@
       </thead>
       <tbody id="recipeTableBody"></tbody>
     </table>
+>>>>>>> origin/main
   </div>
+</header>
 
-  <script>
-    let recipes = JSON.parse(localStorage.getItem('myRecipes')) || [];
+<div class="main-title">Show My Recipes 🍽️</div>
 
-    function updateStorage() {
-      localStorage.setItem('myRecipes', JSON.stringify(recipes));
+<div class="container">
+  <div class="section-title">➕ Add / Edit Recipe</div>
+  <form id="recipeForm" onsubmit="handleFormSubmit(event)">
+    <input type="hidden" id="recipeId">
+    <input type="text" id="name" placeholder="Recipe Name" required />
+    <input type="text" id="category" placeholder="Category" required />
+    <input type="text" id="area" placeholder="Area" required />
+    <textarea id="instructions" placeholder="Instructions" rows="4" required></textarea>
+    <button class="btn-add" type="submit">Save Recipe</button>
+    <button type="button" class="btn-import" onclick="importFromAPI()">Import from TheMealDB</button>
+  </form>
+
+  <div class="section-title">📋 My Recipes </div>
+  <table>
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Area</th>
+      <th>Instructions</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody id="recipeTableBody"></tbody>
+  </table>
+</div>
+
+<script>
+  let recipes = JSON.parse(localStorage.getItem('myRecipes')) || [];
+
+  function updateStorage() {
+    localStorage.setItem('myRecipes', JSON.stringify(recipes));
+  }
+
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('recipeId').value;
+    const name = document.getElementById('name').value.trim();
+    const category = document.getElementById('category').value.trim();
+    const area = document.getElementById('area').value.trim();
+    const instructions = document.getElementById('instructions').value.trim();
+
+    if (!name || !category || !area || !instructions) return;
+
+    if (id) {
+      const index = recipes.findIndex(r => r.id === id);
+      if (index !== -1) {
+        recipes[index] = { id, name, category, area, instructions };
+      }
+    } else {
+      const newRecipe = {
+        id: Date.now().toString(),
+        name,
+        category,
+        area,
+        instructions
+      };
+      recipes.push(newRecipe);
     }
 
-    function handleFormSubmit(e) {
-      e.preventDefault();
-      const id = document.getElementById('recipeId').value;
-      const name = document.getElementById('name').value.trim();
-      const category = document.getElementById('category').value.trim();
-      const area = document.getElementById('area').value.trim();
-      const instructions = document.getElementById('instructions').value.trim();
+    updateStorage();
+    displayRecipes();
+    document.getElementById('recipeForm').reset();
+    document.getElementById('recipeId').value = '';
+  }
 
+<<<<<<< HEAD
+  function displayRecipes() {
+    const tbody = document.getElementById('recipeTableBody');
+    tbody.innerHTML = '';
+    if (recipes.length === 0) {
+      const row = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 5;
+      td.textContent = 'No recipes yet.';
+      row.appendChild(td);
+      tbody.appendChild(row);
+      return;
+    }
+
+    recipes.forEach(recipe => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+=======
       if (!name || !category || !area || !instructions) return;
 
       if (id) {
@@ -245,6 +335,7 @@
       recipes.forEach(recipe => {
         const row = document.createElement('tr');
         row.innerHTML = 
+>>>>>>> origin/main
           <td>${recipe.name}</td>
           <td>${recipe.category}</td>
           <td>${recipe.area}</td>
@@ -253,21 +344,34 @@
             <button class="btn-edit" onclick="editRecipe('${recipe.id}')">Edit</button>
             <button class="btn-delete" onclick="deleteRecipe('${recipe.id}')">Delete</button>
           </td>
+<<<<<<< HEAD
+        `;
+      tbody.appendChild(row);
+    });
+  }
+=======
         ;
         tbody.appendChild(row);
       });
     }
+>>>>>>> origin/main
 
-    function editRecipe(id) {
-      const recipe = recipes.find(r => r.id === id);
-      if (!recipe) return;
-      document.getElementById('recipeId').value = recipe.id;
-      document.getElementById('name').value = recipe.name;
-      document.getElementById('category').value = recipe.category;
-      document.getElementById('area').value = recipe.area;
-      document.getElementById('instructions').value = recipe.instructions;
-    }
+  function editRecipe(id) {
+    const recipe = recipes.find(r => r.id === id);
+    if (!recipe) return;
+    document.getElementById('recipeId').value = recipe.id;
+    document.getElementById('name').value = recipe.name;
+    document.getElementById('category').value = recipe.category;
+    document.getElementById('area').value = recipe.area;
+    document.getElementById('instructions').value = recipe.instructions;
+  }
 
+<<<<<<< HEAD
+  function deleteRecipe(id) {
+    if (!confirm("Are you sure you want to delete this recipe?")) return;
+    recipes = recipes.filter(r => r.id !== id);
+    updateStorage();
+=======
     function deleteRecipe(id) {
       if (!confirm("Are you sure you want to delete this recipe?")) return;
       recipes = recipes.filter(r => r.id !== id);
@@ -292,8 +396,32 @@
     }
 
     // Initial load
+>>>>>>> origin/main
     displayRecipes();
-  </script>
+  }
+
+  function importFromAPI() {
+    const mealName = prompt("Enter a meal name to import:");
+    if (!mealName) return;
+
+    fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`)
+            .then(res => res.json())
+            .then(data => {
+              if (!data.meals) return alert("Meal not found!");
+              const meal = data.meals[0];
+              document.getElementById('name').value = meal.strMeal;
+              document.getElementById('category').value = meal.strCategory;
+              document.getElementById('area').value = meal.strArea;
+              document.getElementById('instructions').value = meal.strInstructions;
+            });
+  }
+
+  // Initial load
+  displayRecipes();
+</script>
 </body>
 </html>
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/main
