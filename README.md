@@ -1,7 +1,7 @@
 # 🍽️ Meal Explorer
 
 ## 👩‍💻 Group Members:
-- Nour Manasrah – 121163 
+- Nour Manasrah – 1211163 
 - Randa Samhan – 1193050
 - Malak Khalaf– 1191593 
 
