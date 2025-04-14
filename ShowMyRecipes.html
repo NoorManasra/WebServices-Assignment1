@@ -147,7 +147,6 @@
   </style>
 </head>
 <body>
-
 <header>
   <div class="nav-container">
     <h1>🍽️ Meal Explorer</h1>
@@ -177,10 +176,10 @@
     <input type="text" id="area" placeholder="Area" required />
     <textarea id="instructions" placeholder="Instructions" rows="4" required></textarea>
     <button class="btn-add" type="submit">Save Recipe</button>
-    <button type="button" class="btn-import" onclick="importFromAPI()">Import from TheMealDB</button>
+    <button type="button" class="btn-import" onclick="importFromAPI()">Show from TheMealDB</button>
   </form>
 
-  <div class="section-title">📋 My Recipes </div>
+  <div class="section-title">📋 My Recipes</div>
   <table>
     <thead>
     <tr>
@@ -237,28 +236,24 @@
   function displayRecipes() {
     const tbody = document.getElementById('recipeTableBody');
     tbody.innerHTML = '';
+
     if (recipes.length === 0) {
-      const row = document.createElement('tr');
-      const td = document.createElement('td');
-      td.colSpan = 5;
-      td.textContent = 'No recipes yet.';
-      row.appendChild(td);
-      tbody.appendChild(row);
+      tbody.innerHTML = '<tr><td colspan="5">No recipes yet.</td></tr>';
       return;
     }
 
     recipes.forEach(recipe => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${recipe.name}</td>
-        <td>${recipe.category}</td>
-        <td>${recipe.area}</td>
-        <td>${recipe.instructions}</td>
-        <td>
-          <button class="btn-edit" onclick="editRecipe('${recipe.id}')">Edit</button>
-          <button class="btn-delete" onclick="deleteRecipe('${recipe.id}')">Delete</button>
-        </td>
-      `;
+          <td>${recipe.name}</td>
+          <td>${recipe.category}</td>
+          <td>${recipe.area}</td>
+          <td>${recipe.instructions}</td>
+          <td>
+            <button class="btn-edit" onclick="editRecipe('${recipe.id}')">Edit</button>
+            <button class="btn-delete" onclick="deleteRecipe('${recipe.id}')">Delete</button>
+          </td>
+        `;
       tbody.appendChild(row);
     });
   }
@@ -281,27 +276,24 @@
   }
 
   function importFromAPI() {
-    const mealName = prompt("Enter a meal name to import:");
+    const mealName = prompt("Enter a meal name to import from TheMealDB:");
     if (!mealName) return;
 
     fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${mealName}`)
             .then(res => res.json())
             .then(data => {
-              if (!data.meals) {
-                alert('Meal not found!');
-                return;
-              }
-
+              if (!data.meals) return alert("Meal not found!");
               const meal = data.meals[0];
               document.getElementById('name').value = meal.strMeal;
               document.getElementById('category').value = meal.strCategory;
               document.getElementById('area').value = meal.strArea;
               document.getElementById('instructions').value = meal.strInstructions;
-            });
+            })
+            .catch(() => alert("Failed to fetch from API"));
   }
 
+  // Initial load
   displayRecipes();
 </script>
-
 </body>
 </html>
